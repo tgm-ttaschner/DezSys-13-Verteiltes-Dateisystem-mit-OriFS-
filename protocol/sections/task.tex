@@ -1,0 +1,23 @@
+%!TEX root=../document.tex
+
+\section{Installation und Implementierung}
+"'\textit{Ori is a distributed file system built for offline operation and empowers the user with control over synchronization operations and conflict resolution. We provide history through light weight snapshots and allow users to verify the history has not been tampered with. Through the use of replication instances can be resilient and recover damaged data from other nodes.}"' \cite{OrifsStanford}
+
+Installieren Sie Ori und testen Sie die oben beschriebenen Eckpunkte dieses verteilten Dateisystems (DFS). Verwenden Sie dabei auf jeden Fall alle Funktionalitäten der API von Ori um die Einsatzmöglichkeiten auszuschöpfen. Halten Sie sich dabei zuallererst an die Beispiele aus dem Paper im Kapitel 2 \cite{OrifsHistory}. Zeigen Sie mögliche Einsatzgebiete für Backups und Roadwarriors (z.B. Laptopbenutzer möchte Daten mit zwei oder mehreren Servern synchronisieren). Führen Sie auch die mitgelieferten Tests aus und kontrollieren Sie deren Ausgaben (Hilfestellung durch Wiki \cite{OrifsBitbucket}).
+
+\subsection{Gegenüberstellung}
+Wo gibt es Überschneidungen zu anderen Implementierungen von DFS? Listen Sie diese auf und dokumentieren Sie mögliche Entscheidungsgrundlagen für mindestens zwei unterschiedliche Einsatzgebiete. Verwenden Sie dabei zumindest HDFS \cite{Hadoopfs} und GlusterFS \cite{Glusterfs} als Gegenspieler zu Ori. Weitere Implementierungen sind möglich aber nicht verpflichtend. Um aussagekräftige Vergleiche anstellen zu können, wäre es von Vorteil die anderen Systeme ebenfalls - zumindest oberflächlich - zu testen.
+
+
+\subsection{Info}
+Gruppengröße: 2 Mitglieder
+Gesamtpunkte: 16
+
+\begin{itemize}
+\item Installation und Testdurchlauf von Ori: 2 Punkte
+\item Einsatz/Dokumentation der Ori API (replicate, snapshot, checkout, graft, filelog, list, log, merge, newfs, pull, remote, removefs, show, status, tip, varlink): 8 Punkte
+\item Gegenüberstellungstabelle: 4 Punkte
+\item Einsatz der Gegenspieler: 2 Punkte
+\end{itemize}
+
+\clearpage
