@@ -10,9 +10,7 @@ Wo gibt es Überschneidungen zu anderen Implementierungen von DFS? Listen Sie di
 
 ## Info ##
 Gruppengröße: 2 Mitglieder
-
 Gesamtpunkte: 16
-
 
 * Installation und Testdurchlauf von Ori: 2 Punkte
 * Einsatz/Dokumentation der Ori API (replicate, snapshot, checkout, graft, filelog, list, log, merge, newfs, pull, remote, removefs, show, status, tip, varlink): 8 Punkte
@@ -22,11 +20,7 @@ Gesamtpunkte: 16
 
 ## Quellen ##
 [1] Ori File System, Stanford Website, online: http://ori.scs.stanford.edu/, visited: 2016-04-01
-
 [2] Ori File System, Bitbucket Wiki, online: https://bitbucket.org/orifs/ori/wiki/Home, visited: 2016-04-01
-
 [3] Ali José Mashtizadeh, Andrea Bittau, Yifeng Frang Huang, David Mazières. Replication, History, and Grafting in the Ori File System. In Proceedings of the 24th Symposium on Operating Systems Principles, November 2013. Paper.
-
 [4] Apache Hadoop FileSystem, http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html, visited: 2016-04-01
-
 [5] GlusterFS, http://gluster.readthedocs.org/en/latest/, visited: 2016-04-01
