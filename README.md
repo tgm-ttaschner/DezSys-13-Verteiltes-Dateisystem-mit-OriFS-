@@ -9,7 +9,8 @@ Installieren Sie Ori und testen Sie die oben beschriebenen Eckpunkte dieses vert
 Wo gibt es Überschneidungen zu anderen Implementierungen von DFS? Listen Sie diese auf und dokumentieren Sie mögliche Entscheidungsgrundlagen für mindestens zwei unterschiedliche Einsatzgebiete. Verwenden Sie dabei zumindest HDFS [4] und GlusterFS [5] als Gegenspieler zu Ori. Weitere Implementierungen sind möglich aber nicht verpflichtend. Um aussagekräftige Vergleiche anstellen zu können, wäre es von Vorteil die anderen Systeme ebenfalls - zumindest oberflächlich - zu testen.
 
 ## Info ##
-Gruppengröße: 2 Mitglieder\n
+Gruppengröße: 2 Mitglieder
+
 Gesamtpunkte: 16
 
 * Installation und Testdurchlauf von Ori: 2 Punkte
