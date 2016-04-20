@@ -14,7 +14,7 @@ apt-get autoremove -y
 apt-get clean
 
 wget https://bitbucket.org/orifs/ori/downloads/ori-$VERSION.$EXT
-tar zxvf ori-$VERSION.$EXT
+tar xvfJ ori-$VERSION.$EXT
 cd ori-$VERSION
 scons
 
