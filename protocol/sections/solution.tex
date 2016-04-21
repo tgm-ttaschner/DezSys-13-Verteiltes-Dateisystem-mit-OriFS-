@@ -64,6 +64,22 @@ Nach nur wenigen Testfällen schlägt der Lauf fehl. Eine Recherche ergibt, dass
 end-to-end tests are in ongoing development and only about half of them are
 expected to run reliably.  In a future release the tests will be improved to
 make it easier to run.'} \newline
+Die in der Aufgabenstellung beschriebene Hilfestellung schafft Abhilfe. \cite{OrifsBitbucket} Im folgenden Schritt wird im extrahierten Archiv die Datei \textit{runtests\_config.sh} angelegt. Das File beinhaltet folgende Zeilen:
+\begin{lstlisting}[frame=single, language=bash, caption=Inhalt runtests\_config.sh]
+# Required for Mac OS X and FreeBSD only (comment out on Linux machines)
+# export UMOUNT="umount"
+
+# Not updated to new CLI
+HTTP_CLONE="no"
+HTTP_PULL="no"
+MERGE="no"
+MOUNT_WRITE="no"
+MOUNT_WRITE_PYTHON_MT="no"
+\end{lstlisting}
+\clearpage
+Die Unit-Tests, die nicht funktionieren, werden übersprungen. Bei Fehlern muss der Ordner \textit{tempdir} sowie die Testrepositories in dem im Home-Verzeichnis versteckten Ordner \textit{~/.ori/<name>.ori} gelöscht werden. Ein SSH-Public Key muss ebenso angelegt werden, um ein passwortloses Anmelden zu ermöglichen. Die Tests mit der Numer 54 und 61 resultieren in einem Syntaxfehler. Das Package ist nicht auf dem Rechner vorhanden, liegt daher nicht an OriFS. Nach ausgedehntem Troubleshooting und Lesen der Fehlermeldung konnte auch dieser Fehler behoben werden. Die Files im Ordner \textit{ori\_tests}, \textit{53-mount-write-wget.sh} sowie \textit{61-mount-write-wget-mt.sh}, müssen ausgebessert werden. Die jeweils erste Zeile muss auf die aktuell installierte Version von \textit{wget} zeigen. In diesem Fall wurde der String auf \textit{wget-1.16.1} ausgebessert. Erst jetzt funktionieren die Tests ohne Probleme. Die Testfälle 01-05, 11-15, 30, 52-53, 60-61 wurden erfolgreich ausgeführt, 21-22, 35, 51, 62 wurden übersprungen.
+
+\subsection{Funktionalitäten der API von Ori}
 
 
 %\begin{lstlisting}[frame=single, caption=Testcaption]
