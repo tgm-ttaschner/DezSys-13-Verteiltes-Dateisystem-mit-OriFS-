@@ -129,14 +129,31 @@ Name                            File System ID
 dezsys                          0868b64e-d0ec-4c2d-9230-3ce66f301136
 \end{lstlisting}
 
+\subsubsection{replicate - Eine lokale Repository-Replik anlegen}
+\label{subsubsec:replicate - Eine lokale Repository-Replik anlegen}
+Der Befehl \textit{replicate} lässt Ori-Dateisysteme auf andere replizieren. So lässt sich ein Repository in dem Sinne 'klonen'. Langsam wird es möglich, Ori effektiv als verteiltes Dateisystem einzusetzen. Es wird nur das Dateisystem erstellt, das Verzeichnis muss händisch erstellt und gemountet werden. Folgende Befehle sind notwendig:
+\begin{lstlisting}[frame=single, caption=replicate]
+ori replicate root@debian:dezsys_remote
+
+mkdir dezsys_remote
+orifs dezsys_remote
+\end{lstlisting}
+
+\clearpage
+
 \subsubsection{snapshot - Einen Repository-Snapshot anlegen}
 \label{subsubsec:snapshot - Einen Repository-Snapshot anlegen}
 In Ori dient ein Snapshot dazu, Veränderungen im Filesystem zu erkennen und diese zu speichern sowie den Commit den Remote Hosts bereitzustellen, welche das Dateisystem replizieren. Snapshots können auch zur lokalen Versionierung verwendet werden, generell vereint der Befehl \textit{commit \& push} in einem. Hier ein Beispiel, wie ein Snapshot nach Veränderungen an Dateien aussieht inkl Commit ID.
 \begin{lstlisting}[frame=single, caption=snapshot]
-root@debian:/home/mweinberger/dezsys# ori snapshot
-
+root@debian:/home/mweinberger/dezsys# ori snapshot EINS
 Committed 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
+
+root@debian:/home/mweinberger/dezsys# echo "Hallo!" > testfile.txt
+
+root@debian:/home/mweinberger/dezsys# ori snapshot ZWEI
+Committed 8eeb2869203d968f6ae8eeb28b2714a34df5b265d46b8eeb2869203d968f6ae3
 \end{lstlisting}
+Die gespeicherten Zustände der Snapshots sind in Unterverzeichnissen (\textit{.snapshot}) abgelegt, weshalb ein 'Rollback' zu früheren Zuständen sehr einfach ist (herauskopieren). Ohne Veränderungen gibt der Befehl nur ein 'No changes' zurück, der restliche Vorgang wird abgebrochen.
 
 \subsubsection{log - Eine Commit-History für das Repository}
 \label{subsubsec:log - Eine Commit-History für das Repository}
@@ -153,6 +170,25 @@ Date:      Fri Apr 12 20:20:31 2016
 Created snapshot 'Hallo.txt'.
 \end{lstlisting}
 
+\subsubsection{tip - Gibt den neuesten Commit aus}
+\label{subsubsec:tip - Gibt den neuesten Commit aus}
+Mit diesem Befehl lässt sich die aktuellste Commit ID ermitteln. Er muss jedoch in einem gemounteten Ori-Dateisystem ausgeführt werden.
+\begin{lstlisting}[frame=single, caption=log]
+root@debian:/home/mweinberger/dezsys# ori tip
+
+04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
+\end{lstlisting}
+
+\subsubsection{pull/checkout - Änderungen von einem Repository beziehen}
+\label{subsubsec:pull/checkout - Änderungen von einem Repository beziehen}
+Dieser Befehl ist nach Git-Ordnung eher als \textit{Fetch} zu verstehen. Alle (entfernten) Veränderungen müssen auch am lokalen Dateisystem sein. Mit \textit{pull} werden sie lediglich heruntergeladen, zurückgeliefert wird eine Commit ID. Solange bis der \textit{checkout}-Befehl mit genannter ID nicht ausgeführt wurde, sind die Files nicht im Verzeichnis vorhanden.
+\begin{lstlisting}[frame=single, caption=pull]
+ori pull
+
+ori checkout 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
+\end{lstlisting}
+
+\clearpage
 
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
