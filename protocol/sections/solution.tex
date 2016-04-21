@@ -4,9 +4,37 @@
 \label{sec:Ergebnisse}
 
 \subsection{Installation und Testdurchlauf von Ori}
-aufbau test-vm, für welche systeme ist ori
+Für die Übungsdurchführung wird mithife von Vagrant eine 'ubuntu/wily64'-Box bereitgestellt. Das dazugehörige Vagrantfile befindet sich in unserem Repository. \cite{repo} Auf der Herstellerseite sind auch einige der wichtigsten Kernaspekte von OriFS aufgelistet: 
+
+\begin{itemize}
+	\item Peer-to-Peer \newline
+	'Ori operates peer-to-peer among your devices and uses existing secure communication channels such as SSH to transfer your data.'
+	\item Work Offline \newline
+	'In today's world we often are moving around with intermittent network connectivity and we want to access our data when we board a plane or travel to the office.'
+	\item Secure \newline
+	'Ori can verify the authenticity of your data and ensure it has not been tampered with. Data is transfered over SSH. Device discovery and automatic synchronization uses a shared secret to initiate transfers.'
+	\item Instant Access \newline
+	'Instantly mount remote file systems and start working while you synchronize data in the background.' \cite{OrifsStanford}
+\end{itemize}
+
 \subsubsection{Fehler bei Installation über Ubuntu PPA}
-nicht möglich, 404-fehler
+Die Installationsanleitung auf der Seite der Hersteller \cite{OrifsStanford} ist falsch. \newline
+\begin{lstlisting}[frame=single, language=bash, caption=Anleitung zur Installation laut Hersteller - fehlerhaft]
+add-apt-repository ppa:ezyang/ppa
+apt-get update
+# Hier entsteht der Fehler: 404 Not Found
+# Einige Indexdateien konnten nicht heruntergeladen werden. 
+# Sie wurden ignoriert oder alte an ihrer Stelle benutzt.
+apt-get install ori # Funktioniert nicht!
+\end{lstlisting}
+Hierbei kommt es zu einem 404-Fehler, die Informationen zur Installation sind nicht mehr aktuell. Diese Paketquelle ist nicht mehr vorhanden, da sie bereits in den Standard-Paketquellen vorhanden sind.
+\subsubsection{Installation in Ubuntu}
+Im Zuge dessen ist es regelrecht einfach, OriFS zu installieren. Folgende Befehle sind notwendig:
+\begin{lstlisting}[frame=single, language=bash, caption=Anleitung zur Installation]c
+apt-get update
+apt-get install ori
+\end{lstlisting}
+Daraufhin ist OriFS unter Ubuntu vollständig installiert.
 \subsubsection{Kompilieren und Installation 'from source' mit SCons}
 befehle rein, kurz beschreiben wohin installiert wird --> verzeichnis für so make-programme
 
