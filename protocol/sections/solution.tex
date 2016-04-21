@@ -37,7 +37,7 @@ apt-get install ori
 Daraufhin ist OriFS unter Ubuntu vollständig installiert.
 \subsubsection{Kompilieren und Installation 'from source' mit SCons}
 OriFS ist laut den Herstellern verfügbar für FreeBSD, OS X, Arch Linux und Ubuntu.
-Es gibt aber natürlich auch eine andere Art, das Programm zu erlangen: Direkt über den frei zugänglichen Quelltext kompilieren und installieren. Hierbei wird unter anderem SCons als Build-Tool verwendet. Dafür sind folgende Schritte notwendig:
+Es gibt aber natürlich auch eine andere Art, das Programm zu erlangen: Direkt über den frei zugänglichen Quelltext kompilieren und installieren. Dafür sind folgende Schritte notwendig:
 \begin{lstlisting}[frame=single, language=bash, caption=Anleitung zur Installation 'from source']
 apt-get update
 
@@ -52,9 +52,19 @@ scons
 
 scons PREFIX=/usr/local/ install
 \end{lstlisting}
-Im Repository sind auch die von uns gewünschten Testfälle enthalten. 
+Hierbei wird unter anderem SCons als Build-Tool verwendet. Der Installationspfad '/usr/local' ist daher vorzuziehen, weil hier vom Administrator Programme und Dateien ablegt werden können, die von der entsprechenden Distribution des jeweiligen Systems unabhängig installiert worden sind, wie etwa selbstkompilierte oder unabhängig von der Distribution heruntergeladene Programme. 
 
 \subsubsection{OriFS-Testfälle ausführen}
+Im entpackten Sourcecode-Archiv sind auch die von uns gewünschten Testfälle enthalten. Folgendes Skript führt diese aus:
+\begin{lstlisting}[frame=single, language=bash, caption=Erster Versuch Testfälle]
+./runtests.sh
+\end{lstlisting}
+Nach nur wenigen Testfällen schlägt der Lauf fehl. Eine Recherche ergibt, dass dies keineswegs ein Einzelfall ist. Das mitgelieferte README-File, zitiert: \newline
+\textit{'There are multiple unit tests available inside the build directory.  The
+end-to-end tests are in ongoing development and only about half of them are
+expected to run reliably.  In a future release the tests will be improved to
+make it easier to run.'} \newline
+
 
 %\begin{lstlisting}[frame=single, caption=Testcaption]
 %
