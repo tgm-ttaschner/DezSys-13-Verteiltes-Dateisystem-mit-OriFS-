@@ -79,8 +79,8 @@ MOUNT_WRITE_PYTHON_MT="no"
 \clearpage
 Die Unit-Tests, die nicht funktionieren, werden übersprungen. Bei Fehlern muss der Ordner \textit{tempdir} sowie die Testrepositories in dem im Home-Verzeichnis versteckten Ordner \textit{~/.ori/<name>.ori} gelöscht werden. Ein SSH-Public Key muss ebenso angelegt werden, um ein passwortloses Anmelden zu ermöglichen. Die Tests mit der Numer 54 und 61 resultieren in einem Syntaxfehler. Das Package ist nicht auf dem Rechner vorhanden, liegt daher nicht an OriFS. Nach ausgedehntem Troubleshooting und Lesen der Fehlermeldung konnte auch dieser Fehler behoben werden. Die Files im Ordner \textit{ori\_tests}, \textit{53-mount-write-wget.sh} sowie \textit{61-mount-write-wget-mt.sh}, müssen ausgebessert werden. Die jeweils erste Zeile muss auf die aktuell installierte Version von \textit{wget} zeigen. In diesem Fall wurde der String auf \textit{wget-1.16.1} ausgebessert. Erst jetzt funktionieren die Tests ohne Probleme. Die Testfälle 01-05, 11-15, 30, 52-53, 60-61 wurden erfolgreich ausgeführt, 21-22, 35, 51, 62 wurden übersprungen.
 
-\subsection{Funktionalitäten der API von Ori}
-
+\subsection{Einsatz/Dokumentation der Ori API}
+\subsubsection{replicate}
 
 %\begin{lstlisting}[frame=single, caption=Testcaption]
 %
