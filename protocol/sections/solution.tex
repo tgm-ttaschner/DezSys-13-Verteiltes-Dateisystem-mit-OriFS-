@@ -5,7 +5,7 @@
 
 \subsection{Installation und Testdurchlauf von Ori}
 \label{subsec:Installation und Testdurchlauf von Ori}
-Für die Übungsdurchführung wird mithife von Vagrant eine 'ubuntu/wily64'-Box bereitgestellt. Das dazugehörige Vagrantfile befindet sich in unserem Repository. \cite{repo} Auf der Herstellerseite sind auch einige der wichtigsten Kernaspekte von OriFS aufgelistet: 
+Für die Übungsdurchführung wird mithife von Vagrant eine 'ubuntu/wily64'-Box bereitgestellt. Das dazugehörige Vagrantfile befindet sich in unserem Repository. \cite{repo} Zum Ausprobieren wurde dazu noch eine Debian-VM mit LXDE aufgesetzt, um die Funktionalität optimal testen zu können. Auf der Herstellerseite sind auch einige der wichtigsten Kernaspekte von OriFS aufgelistet: 
 
 \begin{itemize}
 	\item Peer-to-Peer \newline
@@ -30,6 +30,8 @@ apt-get update
 apt-get install ori # Funktioniert nicht!
 \end{lstlisting}
 Hierbei kommt es zu einem 404-Fehler, die Informationen zur Installation sind nicht mehr aktuell. Diese Paketquelle ist nicht mehr vorhanden, da sie bereits in den Standard-Paketquellen vorhanden sind.
+
+\clearpage
 
 \subsubsection{Installation in Ubuntu}
 \label{subsubsec:Installation in Ubuntu}
@@ -71,6 +73,7 @@ Nach nur wenigen Testfällen schlägt der Lauf fehl. Eine Recherche ergibt, dass
 end-to-end tests are in ongoing development and only about half of them are
 expected to run reliably.  In a future release the tests will be improved to
 make it easier to run.'} \newline
+\clearpage
 Die in der Aufgabenstellung beschriebene Hilfestellung schafft Abhilfe. \cite{OrifsBitbucket} Im folgenden Schritt wird im extrahierten Archiv die Datei \textit{runtests\_config.sh} angelegt. Das File beinhaltet folgende Zeilen:
 \begin{lstlisting}[frame=single, language=bash, caption=Inhalt runtests\_config.sh]
 # Required for Mac OS X and FreeBSD only (comment out on Linux machines)
@@ -88,7 +91,6 @@ MOUNT_WRITE="no"
 
 MOUNT_WRITE_PYTHON_MT="no"
 \end{lstlisting}
-\clearpage
 Die Unit-Tests, die nicht funktionieren, werden übersprungen. Bei Fehlern muss der Ordner \textit{tempdir} sowie die Testrepositories in dem im Home-Verzeichnis versteckten Ordner \textit{~/.ori/<name>.ori} gelöscht werden. Ein SSH-Public Key muss ebenso angelegt werden, um ein passwortloses Anmelden zu ermöglichen. Die Tests mit der Numer 54 und 61 resultieren in einem Syntaxfehler. Das Package ist nicht auf dem Rechner vorhanden, liegt daher nicht an OriFS. Nach ausgedehntem Troubleshooting und Lesen der Fehlermeldung konnte auch dieser Fehler behoben werden. Die Files im Ordner \textit{ori\_tests}, \textit{53-mount-write-wget.sh} sowie \textit{61-mount-write-wget-mt.sh}, müssen ausgebessert werden. Die jeweils erste Zeile muss auf die aktuell installierte Version von \textit{wget} zeigen. In diesem Fall wurde der String auf \textit{wget-1.16.1} ausgebessert. Erst jetzt funktionieren die Tests ohne Probleme. Die Testfälle 01-05, 11-15, 30, 52-53, 60-61 wurden erfolgreich ausgeführt, 21-22, 35, 51, 62 wurden übersprungen.
 
 \subsection{Einsatz / Dokumentation der Ori API}
@@ -117,8 +119,6 @@ ori removefs dezsys
 rm -rf dezsys
 \end{lstlisting}
 
-\clearpage
-
 \subsubsection{list - Lokale Dateisysteme auflisten}
 \label{subsubsec:list - Lokale Dateisysteme auflisten}
 Dieser Befehl listet alle lokalen Ori-Dateisysteme auf. Hier werden Remote-Repositories nicht berücksichtigt.
@@ -127,6 +127,15 @@ root@ubuntu-mweinberger:/home/mweinberger# ori list
 
 Name                            File System ID
 dezsys                          0868b64e-d0ec-4c2d-9230-3ce66f301136
+\end{lstlisting}
+
+\subsubsection{snapshot - Einen Repository-Snapshot anlegen}
+\label{subsubsec:snapshot - Einen Repository-Snapshot anlegen}
+In Ori dient ein Snapshot dazu, Veränderungen im Filesystem zu erkennen und diese zu speichern sowie den Commit den Remote Hosts bereitzustellen, welche das Dateisystem replizieren. Snapshots können auch zur lokalen Versionierung verwendet werden, generell vereint der Befehl \textit{commit \& push} in einem. Hier ein Beispiel, wie ein Snapshot nach Veränderungen an Dateien aussieht inkl Commit ID.
+\begin{lstlisting}[frame=single, caption=snapshot]
+root@debian:/home/mweinberger/dezsys# ori snapshot
+
+Committed 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
 \end{lstlisting}
 
 \subsubsection{log - Eine Commit-History für das Repository}
@@ -142,7 +151,6 @@ Author:    root
 Date:      Fri Apr 12 20:20:31 2016
 
 Created snapshot 'Hallo.txt'.
-
 \end{lstlisting}
 
 
