@@ -77,10 +77,15 @@ Die in der Aufgabenstellung beschriebene Hilfestellung schafft Abhilfe. \cite{Or
 # export UMOUNT="umount"
 
 # Not updated to new CLI
+
 HTTP_CLONE="no"
+
 HTTP_PULL="no"
+
 MERGE="no"
+
 MOUNT_WRITE="no"
+
 MOUNT_WRITE_PYTHON_MT="no"
 \end{lstlisting}
 \clearpage
@@ -92,7 +97,14 @@ Jeder der angeschriebenen Befehle wurde ausgeführt und dokumentiert.
 
 \subsubsection{newfs - Anlegen eines Filesystems}
 \label{subsubsec:newfs - Anlegen eines Filesystems}
+Das Erstellen eines Dateisystems ist wie anzunehmen der erste Schritt bei OriFS. Mithilfe des Befehls \textit{ori} wird somit eines erstellt, und im Anschluss mit einem leeren, neu erstellten Verzeichnis eingehängt.
+\begin{lstlisting}[frame=single, language=bash, caption=newfs]
+ori newfs dezsys
 
+mkdir dezsys
+
+orifs /home/mweinberger/dezsys
+\end{lstlisting}
 
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
