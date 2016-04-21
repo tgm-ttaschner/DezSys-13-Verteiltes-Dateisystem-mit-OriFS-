@@ -4,6 +4,7 @@
 \label{sec:Ergebnisse}
 
 \subsection{Installation und Testdurchlauf von Ori}
+\label{subsec:Installation und Testdurchlauf von Ori}
 Für die Übungsdurchführung wird mithife von Vagrant eine 'ubuntu/wily64'-Box bereitgestellt. Das dazugehörige Vagrantfile befindet sich in unserem Repository. \cite{repo} Auf der Herstellerseite sind auch einige der wichtigsten Kernaspekte von OriFS aufgelistet: 
 
 \begin{itemize}
@@ -18,6 +19,7 @@ Für die Übungsdurchführung wird mithife von Vagrant eine 'ubuntu/wily64'-Box 
 \end{itemize}
 
 \subsubsection{Fehler bei Installation über Ubuntu PPA}
+\label{subsubsec:Fehler bei Installation über Ubuntu PPA}
 Die Installationsanleitung auf der Seite der Hersteller \cite{OrifsStanford} ist falsch. \newline
 \begin{lstlisting}[frame=single, language=bash, caption=Anleitung zur Installation laut Hersteller - fehlerhaft]
 add-apt-repository ppa:ezyang/ppa
@@ -28,14 +30,18 @@ apt-get update
 apt-get install ori # Funktioniert nicht!
 \end{lstlisting}
 Hierbei kommt es zu einem 404-Fehler, die Informationen zur Installation sind nicht mehr aktuell. Diese Paketquelle ist nicht mehr vorhanden, da sie bereits in den Standard-Paketquellen vorhanden sind.
+
 \subsubsection{Installation in Ubuntu}
+\label{subsubsec:Installation in Ubuntu}
 Im Zuge dessen ist es regelrecht einfach, OriFS zu installieren. Folgende Befehle sind notwendig:
 \begin{lstlisting}[frame=single, language=bash, caption=Anleitung zur Installation]c
 apt-get update
 apt-get install ori
 \end{lstlisting}
 Daraufhin ist OriFS unter Ubuntu vollständig installiert.
+
 \subsubsection{Kompilieren und Installation 'from source' mit SCons}
+\label{subsubsec:Kompilieren und Installation 'from source' mit SCons}
 OriFS ist laut den Herstellern verfügbar für FreeBSD, OS X, Arch Linux und Ubuntu.
 Es gibt aber natürlich auch eine andere Art, das Programm zu erlangen: Direkt über den frei zugänglichen Quelltext kompilieren und installieren. Dafür sind folgende Schritte notwendig:
 \begin{lstlisting}[frame=single, language=bash, caption=Anleitung zur Installation 'from source']
@@ -55,6 +61,7 @@ scons PREFIX=/usr/local/ install
 Hierbei wird unter anderem SCons als Build-Tool verwendet. Der Installationspfad '/usr/local' ist daher vorzuziehen, weil hier vom Administrator Programme und Dateien ablegt werden können, die von der entsprechenden Distribution des jeweiligen Systems unabhängig installiert worden sind, wie etwa selbstkompilierte oder unabhängig von der Distribution heruntergeladene Programme. 
 
 \subsubsection{OriFS-Testfälle ausführen}
+\label{subsubsec:OriFS-Testfälle ausführen}
 Im entpackten Sourcecode-Archiv sind auch die von uns gewünschten Testfälle enthalten. Folgendes Skript führt diese aus:
 \begin{lstlisting}[frame=single, language=bash, caption=Erster Versuch Testfälle]
 ./runtests.sh
@@ -80,7 +87,13 @@ MOUNT_WRITE_PYTHON_MT="no"
 Die Unit-Tests, die nicht funktionieren, werden übersprungen. Bei Fehlern muss der Ordner \textit{tempdir} sowie die Testrepositories in dem im Home-Verzeichnis versteckten Ordner \textit{~/.ori/<name>.ori} gelöscht werden. Ein SSH-Public Key muss ebenso angelegt werden, um ein passwortloses Anmelden zu ermöglichen. Die Tests mit der Numer 54 und 61 resultieren in einem Syntaxfehler. Das Package ist nicht auf dem Rechner vorhanden, liegt daher nicht an OriFS. Nach ausgedehntem Troubleshooting und Lesen der Fehlermeldung konnte auch dieser Fehler behoben werden. Die Files im Ordner \textit{ori\_tests}, \textit{53-mount-write-wget.sh} sowie \textit{61-mount-write-wget-mt.sh}, müssen ausgebessert werden. Die jeweils erste Zeile muss auf die aktuell installierte Version von \textit{wget} zeigen. In diesem Fall wurde der String auf \textit{wget-1.16.1} ausgebessert. Erst jetzt funktionieren die Tests ohne Probleme. Die Testfälle 01-05, 11-15, 30, 52-53, 60-61 wurden erfolgreich ausgeführt, 21-22, 35, 51, 62 wurden übersprungen.
 
 \subsection{Einsatz/Dokumentation der Ori API}
+\label{subsec:Einsatz/Dokumentation der Ori API}
+
 \subsubsection{replicate}
+\label{subsubsec:replicate}
+
+\subsection{Gegenüberstellung}
+\label{subsec:Gegenüberstellung}
 
 %\begin{lstlisting}[frame=single, caption=Testcaption]
 %
