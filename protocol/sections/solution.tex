@@ -173,11 +173,13 @@ Created snapshot 'Hallo.txt'.
 \subsubsection{tip - Gibt den neuesten Commit aus}
 \label{subsubsec:tip - Gibt den neuesten Commit aus}
 Mit diesem Befehl lässt sich die aktuellste Commit ID ermitteln. Er muss jedoch in einem gemounteten Ori-Dateisystem ausgeführt werden.
-\begin{lstlisting}[frame=single, caption=log]
+\begin{lstlisting}[frame=single, caption=tip]
 root@debian:/home/mweinberger/dezsys# ori tip
 
 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
 \end{lstlisting}
+
+\clearpage
 
 \subsubsection{pull/checkout - Änderungen von einem Repository beziehen}
 \label{subsubsec:pull/checkout - Änderungen von einem Repository beziehen}
@@ -188,7 +190,18 @@ ori pull
 ori checkout 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
 \end{lstlisting}
 
-\clearpage
+\subsubsection{show - Repository-Informationen ausgeben}
+\label{subsubsec:show - Repository-Informationen ausgeben}
+\textit{show} liefert eine Menge an Informationen über das Repository. Eine mögliche Rückgabe, Struktur immer gleichbleibend:
+\begin{lstlisting}[frame=single, caption=show]
+root@debian:/home/mweinberger/dezsys# ori show
+
+--- Repository ---
+Root: /root/.ori/dezsys.ori
+UUID: dc377ee5-79b5-406b-a844-60a8f480c1d3
+Version: ORI1.1
+HEAD: 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
+\end{lstlisting}
 
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
