@@ -203,6 +203,35 @@ Version: ORI1.1
 HEAD: 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
 \end{lstlisting}
 
+\subsubsection{status - Suche nach Veränderungen seit letztem Commit}
+\label{subsubsec:status - Suche nach Veränderungen seit letztem Commit}
+Wieder gibt es sehr große Parallelen zu Git: Der Befehl ist im Grunde genommen ein \textit{git status}, Ori hat jedoch eine andere Struktur. Auch dieser Befehl kann nur in einem gemounteten Ori-Dateisystem ausgeführt werden.
+\begin{lstlisting}[frame=single, caption=status]
+root@debian:/home/mweinberger/dezsys# ori status
+
+A	/neues-file.txt
+D	/geloeschtes-file.txt
+M	/geaendertes-file.txt
+\end{lstlisting}
+
+\subsubsection{filelog - Anzeigen des Logs für ein spezifisches File}
+\label{subsubsec:filelog - Anzeigen des Logs für ein spezifisches File}
+\textit{ori filelog} ist in dem Sinne nur eine Erweiterung für \textit{ori log}. Auch dieser Befehl kann nur in einem gemounteten Ori-Dateisystem ausgeführt werden. Hier kann ein Filename als Parameter mitgegeben werden, welches im Repository mindestens einmal committed wurde. Nun werden alle Commits ausgegeben, bei denen das angegebene File involviert war. Als Beispiel:
+\begin{lstlisting}[frame=single, caption=filelog]
+root@debian:/home/mweinberger/dezsys# ori filelog dezsys.txt
+
+Commit:    04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
+Parents:   8df1610b6299e4bf086eae0cf473c12326ef49aeed6a3e4eed4656e3832660307
+Tree:      6e9bad8eeb2869203d968f6aed02c4e79e913f6535094d8f512565bf1b8a1b58
+Author:    root
+Date:      Fri Apr 12 20:34:45 2016
+
+Created snapshot 'neuen Text eingefuegt'.
+\end{lstlisting}
+
+\subsubsection{graft - Hard Copy}
+\label{subsubsec:filelog - Hard Copy}
+
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
 
