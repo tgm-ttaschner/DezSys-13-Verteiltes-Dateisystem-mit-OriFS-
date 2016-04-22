@@ -214,6 +214,8 @@ D	/geloeschtes-file.txt
 M	/geaendertes-file.txt
 \end{lstlisting}
 
+\clearpage
+
 \subsubsection{filelog - Anzeigen des Logs für ein spezifisches File}
 \label{subsubsec:filelog - Anzeigen des Logs für ein spezifisches File}
 \textit{ori filelog} ist in dem Sinne nur eine Erweiterung für \textit{ori log}. Auch dieser Befehl kann nur in einem gemounteten Ori-Dateisystem ausgeführt werden. Hier kann ein Filename als Parameter mitgegeben werden, welches im Repository mindestens einmal committed wurde. Nun werden alle Commits ausgegeben, bei denen das angegebene File involviert war. Als Beispiel:
@@ -229,8 +231,15 @@ Date:      Fri Apr 12 20:34:45 2016
 Created snapshot 'neuen Text eingefuegt'.
 \end{lstlisting}
 
-\subsubsection{graft - Hard Copy}
-\label{subsubsec:filelog - Hard Copy}
+\subsubsection{graft - Repository auf ein Anderes kopieren}
+\label{subsubsec:graft - Repository auf ein Anderes kopieren}
+Ori ermöglicht es auch, ein Repository quasi 'hard' auf das andere zu kopieren. Das Verzeichnis wird repliziert in das Verzeichnis des Ziels. Anzugeben sind lediglich Ausgangsrepository, also wovon kopiert werden soll, und das Zielrepository. Um eine aktuelle Version auf dem Zielrepository zu haben, muss nach jeder Veränderung des Ausgangsrepositorys der \textit{graft}-Befehl ausgeführt werden.
+\begin{lstlisting}[frame=single, caption=graft]
+ori graft dezsys dezsys-neu
+\end{lstlisting}
+
+\subsubsection{varlink - Varlink-Variablen verwalten}
+\label{subsubsec:varlink - Varlink-Variablen verwalten}
 
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
