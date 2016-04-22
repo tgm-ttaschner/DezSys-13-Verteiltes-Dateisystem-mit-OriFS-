@@ -251,6 +251,18 @@ domainname      (none)
 hostname        debian
 \end{lstlisting}
 
+\subsubsection{merge - Mergen zweier HEADs}
+\label{subsubsec:remote - Mergen zweier HEADs}
+Hier gab es leider große Schwierigkeiten. Entweder wurde der Befehl falsch verwendet (obwohl wie richtig angewiesen mit Commit ID) oder er ist in der derzeitigen Version des Programms noch nicht sehr ausgereift. Es scheint so, als wäre das Dateisystem dadurch beschädigt worden, da auch andere Befehle plötzlich nicht mehr einsatzfähig sind und Fehlermeldungen werfen, und das reproduzierbar. Dieser Befehl wurde daher lieber übersprungen.
+\begin{lstlisting}[frame=single, caption=merge]
+root@ubuntu-mweinberger:/home/mweinberger/dezsys# ori merge 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
+merge failed with an unknown error!
+\end{lstlisting}
+
+\subsubsection{remote - Verwalten von Remoteverbindungen}
+\label{subsubsec:remote - Verwalten von Remoteverbindungen}
+\textit{ori remote} gibt es, um bei einer Replikation die Verbindungseinstellungen zu verwalten. Es ist ja beispielsweise gut möglich, dass sich eine IP-Adresse ändert. Umso wichtiger ist es, die Remote-Adresse ändern zu können.
+
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
 
