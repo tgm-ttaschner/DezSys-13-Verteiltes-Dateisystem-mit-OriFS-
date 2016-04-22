@@ -131,7 +131,7 @@ dezsys                          0868b64e-d0ec-4c2d-9230-3ce66f301136
 
 \subsubsection{replicate - Eine lokale Repository-Replik anlegen}
 \label{subsubsec:replicate - Eine lokale Repository-Replik anlegen}
-Der Befehl \textit{replicate} lässt Ori-Dateisysteme auf andere replizieren. So lässt sich ein Repository in dem Sinne 'klonen'. Langsam wird es möglich, Ori effektiv als verteiltes Dateisystem einzusetzen. Es wird nur das Dateisystem erstellt, das Verzeichnis muss händisch erstellt und gemountet werden. Folgende Befehle sind notwendig:
+Der Befehl \textit{replicate} lässt Ori-Dateisysteme auf die lokale Maschine replizieren. So lässt sich ein Repository in dem Sinne 'klonen'. Langsam wird es möglich, Ori effektiv als verteiltes Dateisystem einzusetzen. Es wird nur das Dateisystem erstellt, das Verzeichnis muss händisch erstellt und gemountet werden. Folgende Befehle sind notwendig:
 \begin{lstlisting}[frame=single, caption=replicate]
 ori replicate root@debian:dezsys_remote
 
@@ -139,11 +139,10 @@ mkdir dezsys_remote
 orifs dezsys_remote
 \end{lstlisting}
 
-\clearpage
-
 \subsubsection{snapshot - Einen Repository-Snapshot anlegen}
 \label{subsubsec:snapshot - Einen Repository-Snapshot anlegen}
 In Ori dient ein Snapshot dazu, Veränderungen im Filesystem zu erkennen und diese zu speichern sowie den Commit den Remote Hosts bereitzustellen, welche das Dateisystem replizieren. Snapshots können auch zur lokalen Versionierung verwendet werden, generell vereint der Befehl \textit{commit \& push} in einem. Hier ein Beispiel, wie ein Snapshot nach Veränderungen an Dateien aussieht inkl Commit ID.
+\clearpage
 \begin{lstlisting}[frame=single, caption=snapshot]
 root@debian:/home/mweinberger/dezsys# ori snapshot EINS
 Committed 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
@@ -179,8 +178,6 @@ root@debian:/home/mweinberger/dezsys# ori tip
 04c457f7e77dc1831eacc564bb2714a34df5b265d46b4f9e2b697564bc3ad160
 \end{lstlisting}
 
-\clearpage
-
 \subsubsection{pull/checkout - Änderungen von einem Repository beziehen}
 \label{subsubsec:pull/checkout - Änderungen von einem Repository beziehen}
 Dieser Befehl ist nach Git-Ordnung eher als \textit{Fetch} zu verstehen. Alle (entfernten) Veränderungen müssen auch am lokalen Dateisystem sein. Mit \textit{pull} werden sie lediglich heruntergeladen, zurückgeliefert wird eine Commit ID. Solange bis der \textit{checkout}-Befehl mit genannter ID nicht ausgeführt wurde, sind die Files nicht im Verzeichnis vorhanden.
@@ -213,8 +210,6 @@ A	/neues-file.txt
 D	/geloeschtes-file.txt
 M	/geaendertes-file.txt
 \end{lstlisting}
-
-\clearpage
 
 \subsubsection{filelog - Anzeigen des Logs für ein spezifisches File}
 \label{subsubsec:filelog - Anzeigen des Logs für ein spezifisches File}
@@ -261,7 +256,30 @@ merge failed with an unknown error!
 
 \subsubsection{remote - Verwalten von Remoteverbindungen}
 \label{subsubsec:remote - Verwalten von Remoteverbindungen}
-\textit{ori remote} gibt es, um bei einer Replikation die Verbindungseinstellungen zu verwalten. Es ist ja beispielsweise gut möglich, dass sich eine IP-Adresse ändert. Umso wichtiger ist es, die Remote-Adresse ändern zu können.
+\textit{ori remote} gibt es, um bei einer Replikation die Verbindungseinstellungen zu verwalten. Es ist ja beispielsweise gut möglich, dass sich eine IP-Adresse ändert. Umso wichtiger ist es, die Remote-Adresse ändern zu können. Es gibt drei Varianten des Befehls:
+\begin{lstlisting}[frame=single, caption=remote]
+ori remote
+
+ori remote add name root@10.0.0.3:dezsys
+
+ori remote del name
+\end{lstlisting}
+Der \textit{ori remote}-Befehl listet lediglich die derzeit abgespeicherten Verbindungsdaten auf. Mithilfe des zweiten Befehls lässt sich eine Remoteverbindung hinzufügen. Mit dem letzten Befehl wird der Remoteaccess wieder gelöscht.
+
+\subsubsection{Orisync}
+\label{subsubsec:Orisync}
+Orisync ist ein Kommando von OriFS, der sich um die automatische Synchronisierung zwischen den Teilnehmern kümmert. \newline
+\begin{lstlisting}[frame=single, caption=orisync init]
+orisync init
+\end{lstlisting}
+Wenn Orisync initialisiert wird, wird gefragt, ob die Maschine die Erste des Clusters ist. Diese Frage wird mit 'y' beantwortet, und der Clustername wird eingegeben. In der Ausgabe steht dann nochmals der Clustername sowie und ein Cluster-Key. Wieso dieser immer den gleichen Wert 't8jhfhkm' hat, bleibt bis heute ungeklärt. Im nächsten Schritt wird wie in den vorderen Punkten beschrieben ein Dateisystem erstellt. Bei der Erstellung wird ein Verzeichnis \textit{~/.ori/dezsys.ori} erstellt, wobei 'dezsys' austauschbar ist mit dem Namen des Dateisystems. Mit dem folgenden Befehl wird das Filesystem zu orisync geadded, damit es automatisch synchronisiert. 
+\begin{lstlisting}[frame=single, caption=orisync add]
+orisync add ~/.ori/dezsys.ori
+
+orisync
+\end{lstlisting}
+Mit der nachherigen Eingabe von \textit{orisync} wird die automatische Synchronisierung gestartet. Zum jetzigen Zeitpunkt sollten alle Files automatisch unter den Clients ausgetauscht werden. \newline
+Um einem Cluster beizutreten, muss bei \textit{orisync init} 'n' eingegeben werden. Daraufhin müssen Name und Key eingegeben, und das Filesystem vom Remoteserver repliziert werden. (Wie in Anleitung oben beschrieben) Die Prozedur bei \textit{orisync add / orisync} bleibt hier ebenso gleich.
 
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
