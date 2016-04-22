@@ -281,18 +281,259 @@ orisync
 Mit der nachherigen Eingabe von \textit{orisync} wird die automatische Synchronisierung gestartet. Zum jetzigen Zeitpunkt sollten alle Files automatisch unter den Clients ausgetauscht werden. \newline
 Um einem Cluster beizutreten, muss bei \textit{orisync init} 'n' eingegeben werden. Daraufhin müssen Name und Key eingegeben, und das Filesystem vom Remoteserver repliziert werden. (Wie in Anleitung oben beschrieben) Die Prozedur bei \textit{orisync add / orisync} bleibt hier ebenso gleich.
 
+\subsection{Einsatz der Gegenspieler}
+\label{subsec:Einsatz der Gegenspieler}
+Im nachfolgenden Kapitel sollen Gegenspieler von OriFS, wie beispielsweise HadoopFS und GlusterFS eingesetzt werden.
+
+\subsubsection{HadoopFS \cite{hdfs_install, hdfs_ug, hdfs_cmd}}
+\label{subsubsec:HadoopFS}
+''Apache Hadoop ist ein in Java entwickeltes, quelloffenes Framework, welches das Verarbeiten von großen Datenmengen, verteilt über mehrere Cluster, ermöglicht. Es besteht auch mehreren Modulen, wie Hadoop Yarn und Hadoop MapReduce, die zur Verwaltung von Ressourcen eines Clusters dienen. Das Module Hadoop Distributed File System (HDFS) bietet einen Zugriff mit einem hohen Datendurchsatz auf Applikationsdaten an. Andere Untermodule, wie beispielsweise Cassandra, HBase oder Zookeeper sind ebenfalls Bestandteil dieses Frameworks.
+
+Hadoop wird von großen Firmen für ihre Dienste verwendet. Firmen, wie Yahoo! oder Facebook machen intensiv Gebrauch davon. Yahoo! betreibt 42 000 Nodes in seinem Hadoop Cluster (Stand: Juli 2011), während Facebook mehr, als 100 PB an Daten unter Verwendung von HadoopFS speichert. Andere Firmen, wie Amazon, eBay, LinkedIn, ... machen ebenfalls Gebrauch davon.'' \cite{comparison}
+
+\subsubsection{Installation and Konfiguration von HDFS}
+\label{subsubsec:Installation and Konfiguration von HDFS}
+Zunächst müssen Java, SSH und rsync installiert werden. HDFS wurde in Java entwickelt, ein SSH Zugriff auf den HDFS Daemon wird ebenfalls benötigt.
+
+\begin{lstlisting}[frame=single, language=bash, caption=Installieren der benötigten Softwarepakete]
+apt-get install openssh-server rsync openjdk-8-jre
+\end{lstlisting}
+
+Nun kann die Installation von HDFS erfolgen.
+\begin{lstlisting}[frame=single, language=bash, caption=Herunterladen und Entpacken von HDFS]
+wget http://mirror.klaus-uwe.me/apache/hadoop/common/hadoop-2.7.2/hadoop-2.7.2.tar.gz
+tar xf hadoop-2.7.2.tar.gz
+\end{lstlisting}
+
+Als nächstes muss der Pfad zu Java in der Datei \textit{<hadoop-root>/etc/hadoop/hadoop-env.sh} gesetzt werden. Im Rahmen dieser Übung wird die Version 1.8 Build 77 verwendet.
+
+\begin{lstlisting}[frame=single, language=bash, caption=Setzen des Java Pfades in <hadoop-root>/etc/hadoop/hadoop-env.sh]
+export JAVA_HOME=/usr
+\end{lstlisting}
+
+
+\subsubsection{Ausführen eines Examples}
+\label{subsubsec:Ausführen eines Examples}
+Das Example wird in einem Cluster mit nur einer einzigen Node im Pseudo-Distributed Modus ausgeführt.
+Hierzu wird der Cluster in der Datei textit{<hadoop-root>/etc/hadoop/core-site.xml} und textit{<hadoop-root>/etc/hadoop/hdfs-site.xml} konfiguriert.
+\begin{lstlisting}[language=bash, caption=Setzen des Hosts in <hadoop-root>/etc/hadoop/core-site.xml]
+<configuration>
+	<property>
+		<name>fs.defaultFS</name>
+		<value>hdfs://localhost:9000</value>
+	</property>
+</configuration>
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=Setzen der Anzahl der Replikate in <hadoop-root>/etc/hadoop/hdfs-site.xml]
+<configuration>
+	<property>
+		<name>dfs.replication</name>
+		<value>1</value>
+	</property>
+</configuration>
+\end{lstlisting}
+
+It should be able to connect with SSH to localhost without any passphrase, if this is not possible:
+An dieser Stell sollte die passwortlose Anmeldung via SSH funktionieren. Sollte dies nicht der Fall sein, können folgende Befehle Abhilfe verschaffen.
+\begin{lstlisting}[language=bash, caption=SSH Konfiguration]
+ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
+\end{lstlisting}
+
+Nun muss das Dateisystem der Node formatiert werden.
+\begin{lstlisting}[language=bash, caption=Formatieren des Dateisystems]
+<hadoop-root>/bin/hdfs namenode -format
+\end{lstlisting}
+
+Starten des NameNode und DataNode Daemons:
+\begin{lstlisting}[language=bash, caption=Starten des NameNode und DataNode Daemons]
+<hadoop-root>/sbin/start-dfs.sh
+\end{lstlisting}
+
+Nun sollte das Aufrufen des Webinterfaces unter \textit{http://localhost:50070/} möglich sein.
+
+Als nächstes erstellen wir ein entsprechendes Verzeichnis, um den MapReduce-Job ausführen zu können.
+\begin{lstlisting}[language=bash, caption=Erstellen eines Verzeichnisses in dem die Daten gespeichert werden sollen]
+<hadoop-root>/bin/hdfs dfs -mkdir /userin
+<hadoop-root>/bin/hdfs dfs -mkdir /userout
+\end{lstlisting}
+
+Nun werden die Daten in das HDFS kopiert.
+\begin{lstlisting}[language=bash, caption=Kopieren von Files ins HDFS]
+<hadoop-root>/bin/hdfs dfs -put etc/hadoop /userin
+\end{lstlisting}
+
+Ausführen eines Hadoop Examples.
+\begin{lstlisting}[language=bash, caption=Ausführen eines Hadoop Examples]
+<hadoop-root>/bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar grep /userin /userout 'dfs[a-z.]+'
+\end{lstlisting}
+
+Copy the output files from the distributed filesystem to the local filesystem and examine them:
+Kopieren von Daten aus dem HDFS in das lokale Dateisystem mit 
+\begin{lstlisting}[language=bash, caption=Kopieren von Files aus dem HDFS]
+<hadoop-root>/bin/hdfs dfs -get /userin output
+cat output/*
+\end{lstlisting}
+
+Das Einsehen von im Dateisystem gespeicherten Dateien ist über ein Webinterfaces möglich.
+Das Einsehen des Logs ist sowohl über die Konsole, aber auch unter \textit{http://localhost:50070/logs/} möglich.
+
+\subsubsection{GlusterFS}
+\label{subsubsec:GlusterFS}
+GlusterFS ist ein von RedHat entwickeltes quelloffenes verteiltes Dateisystem, welches unter der GNU GPL und anderen Open Source Lizenzen veröffentlicht wird. Es können Dateien im Größenbereich von mehreren Petabyte gespeichert, die von mehreren Tausend Clients verwendet werden können. Es wird ein globaler Namespace verwendet, die Daten werden über storage blocks, welche über TCP/IP oder Infiband RDMA erreichbar sind, bereitgestellt.
+
+Daten, welche in solchen Speicherblöcken abgelegt werden, können vom GlusterFS Server verwaltet und über den GlusterFS Client oder CIFS verwendet werden.
+
+Es ist nicht möglich Dateien zwischen Server Nodes teilen zu lassen. Daten werden hier von mehreren Clients innerhalb des Dateisystems hinzugefügt, verändert und gelöscht. Im Normalfall werden Dateien als Ganzes auf jedem Server Node gespeichert. Die Verwendung von Striping (Dateien werden auf mehrere Teile auf mehrere Nodes aufgeteilt) ist ebenso möglich. Verzeichnisse werden vollständig exportiert, Daten müssen seitens des Clients restrukturiert werden. \cite{glusterabout, glusterwiki}
+
+
+\subsubsection{Installation und Konfiguration von GlusterFS \cite{glusterserverinstall, glusterclientinstall}}
+\label{subsubsec:Installation und Konfiguration von GlusterFS}
+Zunächst muss der GlusterFS Server auf beiden Serverinstanzen installiert werden. Hier werden zwei Ubuntu 15.10 Server verwendet.
+\begin{lstlisting}[language=bash, caption=Installation des GlusterFS Servers]
+apt-get install glusterfs-server
+\end{lstlisting}
+
+Beide Server enthalten einen entsprechenden Eintrag in \textit{/etc/hosts}. Dieser Vorgang muss auf beiden Servern durchgeführt werden.
+\begin{lstlisting}[language=bash, caption=Vorbereiten von /etc/hosts]
+192.168.130.128	gluster1.example.com	gluster1
+192.168.130.129	gluster2.example.com	gluster2
+\end{lstlisting}
+
+Beide Server werden als ein Teilnehmer zu dem Cluster hinzugefügt.
+\begin{lstlisting}[language=bash, caption=Hinzufügen der Server zum Cluster]
+gluster1> gluster peer probe gluster2
+gluster2> gluster peer probe gluster1
+\end{lstlisting}
+
+Nun wird der Status der Teilnehmer überprüft.
+\begin{lstlisting}[language=bash, caption=Überprüfen des Status der Teilnehmer]
+gluster1> gluster peer status
+
+Number of Peers: 1
+Hostname: gluster2
+Uuid: 1c8c2dfe-fb62-49a9-9e45-a749f3b3c0bf
+State: Peer in Cluster (Connected)
+\end{lstlisting}
+
+In diesem Schritt wird ein Verzeichnis angelegt, welches zur Replikation der Clientdaten verwendet werden soll. Dieser Schritt muss auf beiden Servern ausgeführt werden.
+\begin{lstlisting}[language=bash, caption=Erstellen eines Replikationsverzeichnisses]
+mkdir -p /mnt/gluster
+\end{lstlisting}
+
+Erstellen eines Volumes mit dem Namen \textit{data} und Verbinden mit dem zuvor erstellten Verzeichnis.
+\begin{lstlisting}[language=bash, caption=Erstellen des data Volumes]
+gluster1> gluster volume create data replica 2 gluster1:/mnt/gluster gluster2:/mnt/gluster force
+gluster1> gluster volume start data
+
+volume start: data: success
+\end{lstlisting}
+
+Installation des GlusterFS Clients auf einem beliebigen Debian Testing Client.
+\begin{lstlisting}[language=bash, caption=Installation des GlusterFS Clients]
+apt-get install glusterfs-client
+\end{lstlisting}
+
+Erstellen eines Verzeichnisses, in dem die Daten später auf den Server übertragen werden sollen.
+\begin{lstlisting}[language=bash, caption=Erstellen einer Verzeichnisses]
+mkdir -p /mnt/gluster
+\end{lstlisting}
+
+Einbinden des zu replizierenden Volumes.
+\begin{lstlisting}[language=bash, caption=Einbinden des zu replizierenden Volumes]
+mount -t glusterfs 192.168.188.41:/data /mnt/gluster
+\end{lstlisting}
+
+Daraufhin erscheint folgende Fehlermeldung.
+\begin{lstlisting}[language=bash, caption=Fehler der beim Einbinden des Verzeichnisses auftritt]
+Mount failed. Please check the log file for more details.
+
+[2015-03-19 16:51:04.426710] I [fuse-bridge.c:3724:fuse_init] 0-glusterfs-fuse: FUSE inited with protocol versions: glusterfs 7.13 kernel 7.22
+[2015-03-19 16:51:04.426878] W [fuse-bridge.c:705:fuse_attr_cbk] 0-glusterfs-fuse: 2: LOOKUP() / => -1 (No such file or directory)
+[2015-03-19 16:51:04.492092] I [fuse-bridge.c:4628:fuse_thread_proc] 0-fuse: unmounting /mnt/gluster2
+[2015-03-19 16:51:04.492589] W [glusterfsd.c:1002:cleanup_and_exit] (-->/lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7fa6a045647d] (-->/lib/x86_64-linux-gnu/libpthread.so.0(+0x8182) [0x7fa6a0729182] (-->/usr/sbin/glusterfs(glusterfs_sigwaiter+0xd5) [0x7fa6a1212ef5]))) 0-: received signum (15), shutting down
+[2015-03-19 16:51:04.492606] I [fuse-bridge.c:5260:fini] 0-fuse: Unmounting '/mnt/gluster2'.
+\end{lstlisting}
+
+Da keine Lösung für dieses konkrete Problem gefunden werden konnte, wird gluster1 als Client verwendet und ein neuer Ordner zum Testen angelegt.
+\begin{lstlisting}[language=bash, caption=Erstellen eines Verzeichnisses welches repliziert wird]
+mkdir -p /mnt/gluster-client
+\end{lstlisting}
+
+\subsubsection{Ausführen eines eigenen Examples}
+\label{subsubsec:Ausführen eines eigenen Examples}
+Einbinden des zu replizierenden Volumes.
+\begin{lstlisting}[language=bash, caption=Einbinden des zu replizierenden Volumes]
+mount -t glusterfs gluster1:/data /mnt/gluster-client
+\end{lstlisting}
+\clearpage
+
+Nun wird der Inhalt von gluster und gluster-client auf gluster1 überprüft.
+\begin{lstlisting}[language=bash, caption=Überprüfen des zu replizierenden und des replizierten Volumes]
+gluster1> ls -la /mnt/gluster
+total 20
+drwxr-xr-x 4 root root 4096 Apr 22 03:14 .
+drwxr-xr-x 4 root root 4096 Apr 22 03:27 ..
+drw------- 6 root root 4096 Apr 22 03:15 .glusterfs
+drwxr-xr-x 3 root root 4096 Apr 22 03:14 .trashcan
+
+gluster1> ls -la /mnt/gluster-client/
+total 12
+drwxr-xr-x 4 root root 4096 Apr 22 03:14 .
+drwxr-xr-x 4 root root 4096 Apr 22 03:27 ..
+drwxr-xr-x 3 root root 4096 Apr 22 03:14 .trashcan
+\end{lstlisting}
+
+Abschließend wird eine Datei angelegt und wieder der Inhalt der Verzeichnisse überprüft.
+\begin{lstlisting}[language=bash, caption=Überprüfen des zu replizierenden und des replizierten Volumes]
+gluster1> touch /mnt/gluster-client/test.text
+
+gluster1> ls -la /mnt/gluster-client/
+total 13
+drwxr-xr-x 4 root root 4096 Apr 22 03:42 .
+drwxr-xr-x 4 root root 4096 Apr 22 03:27 ..
+-rw-r--r-- 1 root root   10 Apr 22 03:42 test.text
+drwxr-xr-x 3 root root 4096 Apr 22 03:14 .trashcan
+
+gluster1> ls -la /mnt/gluster
+total 28
+drwxr-xr-x 4 root root 4096 Apr 22 03:42 .
+drwxr-xr-x 4 root root 4096 Apr 22 03:27 ..
+drw------- 9 root root 4096 Apr 22 03:42 .glusterfs
+-rw-r--r-- 2 root root   10 Apr 22 03:42 test.text
+drwxr-xr-x 3 root root 4096 Apr 22 03:14 .trashcan
+
+gluster2> ls -la /mnt/gluster
+total 28
+drwxr-xr-x 4 root root 4096 Apr 22 03:42 .
+drwxr-xr-x 4 root root 4096 Apr 22 03:27 ..
+drw------- 9 root root 4096 Apr 22 03:42 .glusterfs
+-rw-r--r-- 2 root root   10 Apr 22 03:42 test.text
+drwxr-xr-x 3 root root 4096 Apr 22 03:14 .trashcan
+\end{lstlisting}
+\clearpage
+
 \subsection{Gegenüberstellung}
 \label{subsec:Gegenüberstellung}
+\begin{table}[h]
+\centering
+	\begin{tabular}{|l|c|c|c|}
+		\hline
+		\textbf{DFS}     & \textbf{OriFS} & \textbf{HDFS} & \textbf{GlusterFS} \\ \hline \hline
+		Dokumentation    &      -         &      +        &          +         \\ \hline
+		Useability        &      -         &\textsubscript{\huge\textasciitilde}&          -         \\ \hline
+		Community        &      -         &      +        &\textsubscript{\huge\textasciitilde}\\ \hline
+		Fehlertoleranz  &      +         &      +        &          +         \\ \hline
+		Hochverfügbarkeit &      +         &      +        &\textsubscript{\huge\textasciitilde}\\ \hline
+		Replikation      &      +         &      +        &          +         \\ \hline
+		Skalierbarkeit     &      +         &      +        &          +         \\ \hline \hline
+		\textbf{Ranking} & \textsubscript{\huge\textasciitilde}               &+&\textsubscript{\huge\textasciitilde}\\ \hline
+	\end{tabular}
+\end{table}
 
-%\begin{lstlisting}[frame=single, caption=Testcaption]
-%
-%\end{lstlisting}
-%
-%
-%\begin{figure}[!h]
-%	\begin{center}
-%		\includegraphics[width=1.0\linewidth]{images/ldapadmin_main.png}
-%		\caption{phpLDAPadmin Startseite}
-%		\label{ldapadmin_main}
-%	\end{center}
-%\end{figure}
+Die Dokumentation der Befehle für OriFS ist in nur mäßigem Umfang enthalten. Die Dokumentation für HDFS und GlusterFS ist vergleichsweise sehr gut geschrieben, da für viele Anwendungsfälle auch kleine Tutorials vorhanden, die sich im Normalfall auch in der Form umsetzen lassen.
+
+Nur ca. die Hälfte der Testfälle für OriFS funktionieren und, selbst, wenn sie funktionieren, dann sind sie stellenweise nicht unbedingt hilfreich. Die Examples für HDFS ließen sich problemlos ausführen. GlusterFS hat schlussendlich auch sehr gut funktioniert, trotz des kleinen Zwischenfalls.
+
+OriFS ist ein neues verteiltes Dateisystem, welches aktuell noch in Entwicklung ist. Infolgedessen ist die Community wahrscheinlich klein. Manche Befehle, wie \textit{merge} und manchmal auch \textit{orisync} wurden noch nicht ausreichend getestet und können einen dauerhaften Schaden am Repository verursachen. Manche Befehle, wie \textit{pull} sollten die Daten herunterladen und anwenden, wie bei git. Stattdessen werden sie aber nur heruntergeladen, was für Verwirrung sorgen kann. Aufgrund dieser Defizite fällt das Fazit für OriFS nur mäßig aus.
